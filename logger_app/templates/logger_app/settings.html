@@ -6,36 +6,160 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fef7e8; padding: 30px; }
-        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; border: 1px solid #ffebd2; }
-        h2 { color: #2c2b28; margin-bottom: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; color: #5a3e2a; }
-        input { width: 100%; padding: 8px; border: 1px solid #ffdbbc; border-radius: 10px; }
-        button { background: #ffd6b3; padding: 10px 20px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #ffc48a; }
-        a { display: inline-block; margin-top: 20px; color: #5a3e2a; }
+        .container { max-width: 680px; margin: 0 auto; }
+
+        .user-header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: white; padding: 12px 20px; border-radius: 20px;
+            margin-bottom: 25px; border: 1px solid #ffebd2;
+        }
+        .nav-link { background: #ffd6b3; padding: 6px 16px; border-radius: 30px; text-decoration: none; color: #5a3e2a; font-weight: 500; font-size: 13px; }
+        .logout-link { background: #ffe0c4; margin-left: 8px; }
+
+        .card {
+            background: white; border-radius: 20px; padding: 28px;
+            border: 1px solid #ffebd2; margin-bottom: 20px;
+        }
+        .card h2 { color: #2c2b28; margin-bottom: 6px; font-size: 20px; }
+        .card .subtitle { color: #9b8472; font-size: 13px; margin-bottom: 22px; }
+
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #5a3e2a; font-size: 14px; }
+        .hint { font-size: 12px; color: #9b8472; margin-bottom: 6px; }
+        input[type=number] {
+            width: 100%; padding: 10px 14px; border: 1px solid #ffdbbc;
+            border-radius: 12px; font-size: 15px; font-family: inherit;
+            background: #fffaf5; color: #3a2a18;
+        }
+        input[type=number]:focus { outline: none; border-color: #e67e22; background: white; }
+
+        .btn-save {
+            background: #e67e22; color: white; padding: 12px 28px;
+            border: none; border-radius: 30px; cursor: pointer;
+            font-weight: 700; font-size: 15px; font-family: inherit;
+            transition: background 0.2s;
+        }
+        .btn-save:hover { background: #cf6d17; }
+
+        /* Блок эффективных порогов */
+        .thresholds-card {
+            background: #fff8f0; border-radius: 20px; padding: 22px 26px;
+            border: 2px solid #ffd6b3; margin-bottom: 20px;
+        }
+        .thresholds-card h3 { color: #b45f2a; font-size: 15px; margin-bottom: 14px; }
+        .threshold-grid { display: flex; gap: 12px; flex-wrap: wrap; }
+        .threshold-item {
+            flex: 1; min-width: 140px; background: white; border-radius: 14px;
+            padding: 14px 16px; border: 1px solid #ffdfc4; text-align: center;
+        }
+        .threshold-value { font-size: 28px; font-weight: 800; color: #e67e22; }
+        .threshold-label { font-size: 12px; color: #9b8472; margin-top: 4px; line-height: 1.4; }
+        .threshold-item.critical .threshold-value { color: #c0392b; }
+        .threshold-item.block .threshold-value { color: #8e44ad; }
+
+        .saved-notice {
+            background: #e8f8ee; border: 1px solid #7dc898; color: #2b6e3c;
+            border-radius: 12px; padding: 10px 16px; font-size: 14px;
+            margin-bottom: 16px; display: none;
+        }
+        .saved-notice.show { display: block; }
+
+        a.back-link { color: #5a3e2a; font-size: 14px; text-decoration: none; }
+        a.back-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h2> Настройки контейнера безопасности</h2>
-    <form method="post" action="/logger/settings/?t={{ token }}">
-        <input type="hidden" name="t" value="{{ token }}">
-        <div class="form-group">
-            <label>Базовая частота (запросов в секунду):</label>
-            <input type="number" name="base_frequency" value="{{ base_freq }}" min="1" step="1" required>
+    <div class="user-header">
+        <strong>⚙️ Настройки безопасности</strong>
+        <div>
+            <a href="/logger/?t={{ token }}" class="nav-link">← Дашборд</a>
+            <a href="/logger/logout/?t={{ token }}" class="nav-link logout-link">Выйти</a>
         </div>
-        <div class="form-group">
-            <label>Процент небольшого превышения (для порога критичности):</label>
-            <input type="number" name="minor_overhead" value="{{ minor_overhead }}" min="0" max="100" step="1" required>
+    </div>
+
+    {% if saved %}
+    <div class="saved-notice show">✅ Параметры сохранены и применены к расчётам.</div>
+    {% endif %}
+
+    <!-- Текущие эффективные пороги -->
+    <div class="thresholds-card">
+        <h3>📊 Текущие эффективные пороги (применяются в расчётах)</h3>
+        <div class="threshold-grid">
+            <div class="threshold-item">
+                <div class="threshold-value" id="display_base">{{ base_freq }}</div>
+                <div class="threshold-label">Базовая частота<br>(запросов/сек)</div>
+            </div>
+            <div class="threshold-item critical">
+                <div class="threshold-value" id="display_critical">{{ critical_threshold }}</div>
+                <div class="threshold-label">Порог критической<br>аномалии (запросов/сек)</div>
+            </div>
+            <div class="threshold-item block">
+                <div class="threshold-value" id="display_block">{{ block_sec }}</div>
+                <div class="threshold-label">Время блокировки<br>(секунд)</div>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Время временной блокировки (секунд):</label>
-            <input type="number" name="block_seconds" value="{{ block_sec }}" min="0" step="1" required>
-        </div>
-        <button type="submit">Сохранить</button>
-    </form>
-    <p><a href="/logger/?t={{ token }}">← Назад на дашборд</a></p>
+        <p style="font-size:12px; color:#9b8472; margin-top:12px;">
+            Порог критичности = ⌈ базовая_частота × (1 + превышение% / 100) ⌉.
+            При превышении базовой частоты — аномалия, при превышении критического порога — временная блокировка.
+        </p>
+    </div>
+
+    <!-- Форма настроек -->
+    <div class="card">
+        <h2>Параметры контейнера безопасности</h2>
+        <p class="subtitle">Изменения вступают в силу немедленно — следующий расчёт на дашборде использует новые значения.</p>
+
+        <form method="post" action="/logger/settings/?t={{ token }}">
+            <input type="hidden" name="t" value="{{ token }}">
+
+            <div class="form-group">
+                <label>Базовая частота (запросов в секунду)</label>
+                <div class="hint">Допустимое количество запросов от одного пользователя к одной ВМ за секунду. Превышение = аномалия.</div>
+                <input type="number" name="base_frequency" id="inp_base" value="{{ base_freq }}" min="1" max="1000" step="1" required>
+            </div>
+
+            <div class="form-group">
+                <label>Процент превышения для критической аномалии (%)</label>
+                <div class="hint">На сколько % частота должна превысить базовую, чтобы считаться критической (и включить блокировку).</div>
+                <input type="number" name="minor_overhead" id="inp_overhead" value="{{ minor_overhead }}" min="0" max="500" step="1" required>
+            </div>
+
+            <div class="form-group">
+                <label>Время временной блокировки (секунд)</label>
+                <div class="hint">На сколько секунд блокируется пользователь при критической аномалии частоты.</div>
+                <input type="number" name="block_seconds" id="inp_block" value="{{ block_sec }}" min="0" max="86400" step="1" required>
+            </div>
+
+            <button type="submit" class="btn-save">💾 Сохранить и применить</button>
+        </form>
+
+        <p style="margin-top:20px;"><a href="/logger/?t={{ token }}" class="back-link">← Назад на дашборд</a></p>
+    </div>
 </div>
+
+<script>
+    // Пересчёт порогов в реальном времени при вводе
+    const inpBase = document.getElementById('inp_base');
+    const inpOverhead = document.getElementById('inp_overhead');
+    const inpBlock = document.getElementById('inp_block');
+    const dispBase = document.getElementById('display_base');
+    const dispCritical = document.getElementById('display_critical');
+    const dispBlock = document.getElementById('display_block');
+
+    function recalc() {
+        const base = parseInt(inpBase.value) || 1;
+        const overhead = parseInt(inpOverhead.value) || 0;
+        const block = parseInt(inpBlock.value) || 0;
+        const critical = Math.ceil(base * (1 + overhead / 100));
+        dispBase.textContent = base;
+        dispCritical.textContent = critical;
+        dispBlock.textContent = block;
+    }
+
+    inpBase.addEventListener('input', recalc);
+    inpOverhead.addEventListener('input', recalc);
+    inpBlock.addEventListener('input', recalc);
+</script>
 </body>
 </html>

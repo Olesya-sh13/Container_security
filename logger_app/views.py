@@ -270,16 +270,24 @@ def settings_view(request):
         with open(log_dir / "audit.log", 'a', encoding='utf-8') as f:
             f.write(f"{datetime.now().isoformat()} | Admin {user.username} | freq={new_freq}, overhead={new_percent}, block_sec={new_block_sec}\n")
 
-        return redirect(f'/logger/settings/?t={token}')
+        return redirect(f'/logger/settings/?t={token}&saved=1')
 
+    import math
     with open(policy_path, 'r', encoding='utf-8') as f:
         policy = json.load(f)
 
+    base_freq = policy.get('base_frequency_per_second', 2)
+    minor_overhead = policy.get('minor_overhead_percent', 20)
+    block_sec = policy.get('temporary_block_seconds', 100)
+    critical_threshold = math.ceil(base_freq * (1 + minor_overhead / 100))
+
     context = {
-        'base_freq': policy.get('base_frequency_per_second', 2),
-        'minor_overhead': policy.get('minor_overhead_percent', 20),
-        'block_sec': policy.get('temporary_block_seconds', 100),
+        'base_freq': base_freq,
+        'minor_overhead': minor_overhead,
+        'block_sec': block_sec,
+        'critical_threshold': critical_threshold,
         'token': token,
+        'saved': request.GET.get('saved') == '1',
     }
     return render(request, 'logger_app/settings.html', context)
 
