@@ -9,6 +9,7 @@ python = "^3.10"
 pandas = "*"
 numpy = "*"
 cryptography = "*"
+gunicorn = "*"
 [tool.poetry.dev-dependencies]
 
 [tool.pyright]

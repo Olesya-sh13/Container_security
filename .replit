@@ -43,7 +43,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python manage.py runserver 0.0.0.0:5000"
+args = "gunicorn --bind 0.0.0.0:5000 --workers 1 --timeout 120 django_project.wsgi:application"
 waitForPort = 5000
 
 [workflows.workflow.metadata]
