@@ -252,9 +252,10 @@
     );
 
     // Формируем финальные массивы значений для каждой метки объединённой оси.
-    // Если в данную секунду событий данного типа не было — подставляем 0.
-    const mergedAllowed = allTimes.map(t => allowedMap[t] || 0);
-    const mergedDenied  = allTimes.map(t => deniedMap[t]  || 0);
+    // Если в данную секунду событий данного типа не было — подставляем null,
+    // чтобы Chart.js не рисовал линию в эту точку и ось Y не опускалась до 0.
+    const mergedAllowed = allTimes.map(t => allowedMap[t] ?? null);
+    const mergedDenied  = allTimes.map(t => deniedMap[t]  ?? null);
 
     // Создаём линейный график на объединённой оси времени
     const lineCtx = document.getElementById('timelineChart').getContext('2d');
@@ -269,7 +270,8 @@
                     borderColor: '#4CAF50',
                     backgroundColor: 'rgba(76, 175, 80, 0.1)',
                     fill: true,
-                    tension: 0.3
+                    tension: 0.3,
+                    spanGaps: false   // не соединять линию через пропуски (null-значения)
                 },
                 {
                     label: 'Запрещено',
@@ -277,7 +279,8 @@
                     borderColor: '#f44336',
                     backgroundColor: 'rgba(244, 67, 54, 0.1)',
                     fill: true,
-                    tension: 0.3
+                    tension: 0.3,
+                    spanGaps: false   // не соединять линию через пропуски (null-значения)
                 }
             ]
         },
@@ -285,7 +288,7 @@
             responsive: true,
             scales: {
                 x: { title: { display: true, text: 'Время' } },
-                y: { title: { display: true, text: 'Количество событий' }, beginAtZero: true, ticks: { stepSize: 1, precision: 0 } }
+                y: { title: { display: true, text: 'Количество событий' }, min: 1, ticks: { stepSize: 1, precision: 0 } }
             },
             plugins: {
                 // При наведении показываем значения обоих рядов одновременно
