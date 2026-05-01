@@ -12,3 +12,9 @@ id = "hJ_v9NZztMkUQ64YnJ5U0"
 uri = "file://Сопровождение_ПС_ГОСТ12207_Задания4-7.docx"
 type = "word_document"
 title = "Задания 4–7 (HTTPS-контейнер, тесты, размещение, уведомление)"
+
+[[outputs]]
+id = "6qhZz_tg-FmCeRLr_f8Mh"
+uri = "file://ЕСПД_v2.0_КЖД_HTTPS.docx"
+type = "word_document"
+title = "ЕСПД КЖД v2.0 — обновлённая документация (HTTPS-переход)"
