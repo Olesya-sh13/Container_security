@@ -6,3 +6,9 @@ id = "XutwMvRx3-ajcrztsj9eq"
 uri = "file://Сопровождение_ПС_ГОСТ12207_Задания1-2.docx"
 type = "word_document"
 title = "Сопровождение ПС — ГОСТ 12207, задания 1–2"
+
+[[outputs]]
+id = "hJ_v9NZztMkUQ64YnJ5U0"
+uri = "file://Сопровождение_ПС_ГОСТ12207_Задания4-7.docx"
+type = "word_document"
+title = "Сопровождение ПС — ГОСТ 12207, задания 4–7"

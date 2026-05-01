@@ -75,6 +75,35 @@ python manage.py runserver 0.0.0.0:5000
 - `/logger/logout/` → logout
 - `/admin/` → Django admin panel
 
+## КЖД v2.0 — HTTPS-контейнер (Задания 4–7 ЛР2)
+
+### Новые файлы
+
+```
+Dockerfile                        # Multi-stage build (builder + runtime, Alpine 3.21)
+docker-compose.yml                # 3 сервиса: app, nginx, logger; 3 тома; 2 сети
+nginx/nginx.conf                  # TLS 1.2/1.3, HSTS, HTTP→HTTPS redirect, extended_ssl
+docker/logger/
+  Dockerfile.logger               # КЖД v2.0 образ
+  log_agent.py                    # Агент: FileWatcher + SyslogUDP + REST API (Flask)
+  requirements.logger.txt         # flask, waitress, apachelogs
+  entrypoint.sh                   # Точка входа контейнера
+certs/generate_self_signed.sh     # Генерация самоподписанного сертификата
+tests/test_https_container.py     # 41 тест (TC-PARSE, TC-DB, TC-API, TC-SEC, TC-INT)
+```
+
+### REST API КЖД v2.0 (порт 8080)
+
+- `GET  /api/v1/health` — статус работоспособности
+- `GET  /api/v1/logs?protocol=TLSv1.3&from=&to=&limit=&offset=` — события журнала
+- `GET  /api/v1/stats/tls` — статистика по TLS-протоколам и шифрам
+- `POST /api/v1/rotate` — принудительная ротация журнала
+
+### Документация
+
+- `Сопровождение_ПС_ГОСТ12207_Задания1-2.docx` — стратегия сопровождения
+- `Сопровождение_ПС_ГОСТ12207_Задания4-7.docx` — контейнер, тесты, размещение, уведомление
+
 ## Автоматизированное модульное тестирование
 
 Используется фреймворк **pytest** + плагин **pytest-django**.
