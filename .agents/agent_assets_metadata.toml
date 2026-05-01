@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "XutwMvRx3-ajcrztsj9eq"
+uri = "file://Сопровождение_ПС_ГОСТ12207_Задания1-2.docx"
+type = "word_document"
+title = "Сопровождение ПС — ГОСТ 12207, задания 1–2"
