@@ -18,3 +18,9 @@ id = "6qhZz_tg-FmCeRLr_f8Mh"
 uri = "file://ЕСПД_v2.0_КЖД_HTTPS.docx"
 type = "word_document"
 title = "ЕСПД КЖД v2.0 — обновлённая документация (HTTPS-переход)"
+
+[[outputs]]
+id = "RmKECwTb9TYWt5H9nk5Gi"
+uri = "file://kjd_flowchart_gost19701.png"
+type = "image"
+title = "Блок-схема КЖД v2.0 — ГОСТ 19.701–90"
