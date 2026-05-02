@@ -24,3 +24,9 @@ id = "RmKECwTb9TYWt5H9nk5Gi"
 uri = "file://kjd_flowchart_gost19701.png"
 type = "image"
 title = "Блок-схема КЖД v2.0 — ГОСТ 19.701–90"
+
+[[outputs]]
+id = "_DdF3T6RqRV4MToCkb1Ie"
+uri = "file://kjd_flowchart_v2.png"
+type = "image"
+title = "Блок-схема КЖД v2.0 — ГОСТ 19.701 (исправленная)"
