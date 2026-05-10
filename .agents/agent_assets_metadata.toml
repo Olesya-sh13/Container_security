@@ -6,3 +6,9 @@ id = "_kTxFuE2CxeYdU5VY7eSI"
 uri = "file://ЛР9_Конфигурационное_управление.docx"
 type = "word_document"
 title = "ЛР9 — Конфигурационное управление ПО"
+
+[[outputs]]
+id = "JHqcSYaMrvBu9PmeAaN9X"
+uri = "file://ЛР9_Конфигурационное_управление_v2.docx"
+type = "word_document"
+title = "ЛР9 — Конфигурационное управление ПО (v2, актуальные данные)"
