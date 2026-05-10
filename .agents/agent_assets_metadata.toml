@@ -2,43 +2,7 @@ uploads = []
 generated = []
 
 [[outputs]]
-id = "XutwMvRx3-ajcrztsj9eq"
-uri = "file://Сопровождение_ПС_ГОСТ12207_Задания1-2.docx"
+id = "_kTxFuE2CxeYdU5VY7eSI"
+uri = "file://ЛР9_Конфигурационное_управление.docx"
 type = "word_document"
-title = "Задания 1–2 (стратегия сопровождения, изменения в системе)"
-
-[[outputs]]
-id = "hJ_v9NZztMkUQ64YnJ5U0"
-uri = "file://Сопровождение_ПС_ГОСТ12207_Задания4-7.docx"
-type = "word_document"
-title = "Задания 4–7 (HTTPS-контейнер, тесты, размещение, уведомление)"
-
-[[outputs]]
-id = "6qhZz_tg-FmCeRLr_f8Mh"
-uri = "file://ЕСПД_v2.0_КЖД_HTTPS.docx"
-type = "word_document"
-title = "ЕСПД КЖД v2.0 — обновлённая документация (HTTPS-переход)"
-
-[[outputs]]
-id = "RmKECwTb9TYWt5H9nk5Gi"
-uri = "file://kjd_flowchart_gost19701.png"
-type = "image"
-title = "Блок-схема КЖД v2.0 — ГОСТ 19.701–90"
-
-[[outputs]]
-id = "_DdF3T6RqRV4MToCkb1Ie"
-uri = "file://kjd_flowchart_v2.png"
-type = "image"
-title = "Блок-схема КЖД v2.0 — ГОСТ 19.701 (исправленная)"
-
-[[outputs]]
-id = "pWrZDsNT2kjx_o7elx3-U"
-uri = "file://kjd_flowchart_v3.png"
-type = "image"
-title = "Блок-схема алгоကритма КЖД v2.0 — ГОСТ 19.701"
-
-[[outputs]]
-id = "UqOumlDNdAjsCe5Moc1fX"
-uri = "file://kjd_flowchart_final.png"
-type = "image"
-title = "Блок-схема КЖД v2.0 — ГОСТ 19.701 (итоговая)"
+title = "ЛР9 — Конфигурационное управление ПО"
