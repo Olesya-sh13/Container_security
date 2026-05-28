@@ -1,18 +1,18 @@
 #!/bin/sh
-# =============================================================================
-# Точка входа контейнера КЖД v2.0
-# Выполняет предварительные проверки и запускает агент журналирования.
-# =============================================================================
-
 set -e
 
-echo "[entrypoint] КЖД v2.0 — старт"
-echo "[entrypoint] LOG_FORMAT  = ${LOG_FORMAT:-extended_ssl}"
-echo "[entrypoint] LOG_LEVEL   = ${LOG_LEVEL:-INFO}"
-echo "[entrypoint] SYSLOG_PORT = ${SYSLOG_PORT:-514}"
+DB_PATH="${DB_PATH:-/data/events.db}"
+NGINX_LOG_PATH="${NGINX_LOG_PATH:-/var/log/nginx/access.log}"
+SYSLOG_PORT="${SYSLOG_PORT:-514}"
+API_PORT="${API_PORT:-8080}"
+LOG_FORMAT="${LOG_FORMAT:-extended_ssl}"
 
-# Создание директории данных, если она не существует
-mkdir -p /app/data
+export DB_PATH NGINX_LOG_PATH SYSLOG_PORT API_PORT LOG_FORMAT
 
-# Запуск основного агента
-exec python /app/log_agent.py
+echo "[КЖД v2.0] Запуск агента журналирования..."
+echo "  БД       : $DB_PATH"
+echo "  Журнал   : $NGINX_LOG_PATH"
+echo "  Syslog   : UDP:$SYSLOG_PORT"
+echo "  API      : :$API_PORT"
+
+exec python log_agent.py

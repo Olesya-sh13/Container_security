@@ -1,44 +1,27 @@
-# =============================================================================
-# Контейнер журналирования событий доступа (КЖД) v2.0
-# Базовый образ: Alpine Linux 3.21 (LTS, поддерживается до 2026-11-01)
-# =============================================================================
+FROM python:3.11-alpine AS runtime
 
-FROM python:3.12-alpine3.21
+LABEL version="2.0" \
+      description="КЖД v2.0 — Контейнер Журналирования и Диагностики" \
+      maintainer="student@university.ru"
 
-LABEL maintainer="company2-dev@example.com" \
-      version="2.0.0" \
-      description="Access Event Logger – syslog receiver + file tailer"
-
-# Установка системных зависимостей
-RUN apk add --no-cache \
-        curl \
-        sqlite \
-        tzdata && \
-    ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
-
-# Создание непривилегированного пользователя
 RUN addgroup -S loggroup && adduser -S loguser -G loggroup
 
 WORKDIR /app
 
-# Копирование и установка Python-зависимостей КЖД
-COPY requirements.logger.txt ./
+COPY requirements.logger.txt .
 RUN pip install --no-cache-dir -r requirements.logger.txt
 
-# Копирование исходного кода агента КЖД
-COPY log_agent.py ./
-COPY entrypoint.sh ./
-RUN chmod +x entrypoint.sh && \
-    mkdir -p /app/data && \
-    chown -R loguser:loggroup /app
+COPY log_agent.py .
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh && chown -R loguser:loggroup /app
+
+RUN mkdir -p /data && chown loguser:loggroup /data
 
 USER loguser
 
-# UDP 514 — syslog-приёмник
-# TCP 8080 — REST API
-EXPOSE 514/udp 8080
+EXPOSE 8080
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:8080/api/v1/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD wget -qO- http://localhost:8080/api/v1/health || exit 1
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
