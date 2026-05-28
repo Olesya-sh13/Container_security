@@ -6,3 +6,9 @@ id = "3nzUbjeK1FkfkkyREZvpk"
 uri = "file://attached_assets/ТЗ_ЛР1_Корнеев_v2.docx"
 type = "word_document"
 title = "ТЗ_ЛР1_Корнеев_v2.docx — обновлённое техническое задание"
+
+[[outputs]]
+id = "EYO5cKJ9WJTkwvToJoMYd"
+uri = "file://attached_assets/ТЗ_ЛР1_Корнеев_v3.docx"
+type = "word_document"
+title = "ТЗ_ЛР1_Корнеев_v3.docx — полное ТЗ со всеми разделами оригинала"
